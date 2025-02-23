@@ -7,9 +7,9 @@ constexpr int kRandomMin = 5;
 constexpr int kRandomMax = 20;
 
 void AddStudent(OfficeHoursQueue& queue, const Student& student) {
-  queue.student_queue.push_back(student);
   queue.student_queue.back().arrival_order = queue.student_arrival_counter;
   queue.student_arrival_counter += 1;
+  queue.student_queue.push_back(student);
 }
 
 void AddStaff(OfficeHoursQueue& queue, const Staff& staff) {
@@ -22,13 +22,13 @@ void AddStaff(OfficeHoursQueue& queue, const Staff& staff) {
     const Staff& current = queue.staff_queue[index];
     const Staff& previous = queue.staff_queue[index - 1];
 
-    if (current.encounter_count > previous.encounter_count) {
+    if (current.encounter_count < previous.encounter_count) {
       Staff temp = queue.staff_queue[index - 1];
       queue.staff_queue[index - 1] = queue.staff_queue[index];
       queue.staff_queue[index] = temp;
       index--;
     } else if (current.encounter_count == previous.encounter_count) {
-      if (current.arrival_order > previous.arrival_order) {
+      if (current.total_help_time < previous.total_help_time) {
         Staff temp = queue.staff_queue[index - 1];
         queue.staff_queue[index - 1] = queue.staff_queue[index];
         queue.staff_queue[index] = temp;
